@@ -1,0 +1,32 @@
+﻿Build started 2/15/2025 6:37:35 PM.
+     1>Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt iMain.cpp
+         iMain.cpp
+     1>C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(127): warning C4005: 'CALLBACK' : macro redefinition
+                 e:\cse\might-is-right-main\sdlab project\glut.h(35) : see previous definition of 'CALLBACK'
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(58): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(59): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(60): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(61): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(62): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(64): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(65): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(66): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(67): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>e:\cse\might-is-right-main\sdlab project\iGraphics.h(68): error C2664: 'UINT_PTR SetTimer(HWND,UINT_PTR,UINT,TIMERPROC)' : cannot convert argument 4 from 'void (__cdecl *)(HWND,unsigned int,unsigned int,unsigned long)' to 'TIMERPROC'
+                 None of the functions with this name in scope match the target type
+     1>Done Building Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.50
