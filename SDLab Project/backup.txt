@@ -294,7 +294,9 @@ void handleJahangir()
 	}
 }
 
-
+bool initMap2 = false;
+bool lvl2Narrative1Active = false;
+bool lvl2Narrative2Active = false;
 void update() {
 	playBGM();
 	// Spawn enemies if narrative is active and they haven't been spawned yet
@@ -363,14 +365,21 @@ void update() {
 		narrative->loadLevel1Narrative3();
 		narrative->narrativeActive = true;
 		narratives.emplace_back(narrative);
-		activeNarrativeIndex++;
-		kalajahangir = std::make_shared<KalaJahangir>("Enforcer", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/kalajahangir",
-			100, 2, false, 4, 6, 15, 154, 5, 15, 10);
-		kalaJahangirSpawned = true;
+
+		// Update after adding to ensure it always remains valid
+		activeNarrativeIndex = narratives.size() - 1;
+		if (!kalajahangir) {
+			kalajahangir = std::make_shared<KalaJahangir>("Enforcer", Pos(400 * 2.4, 150 * 1.8),
+				Dim(128 * 2.4, 128 * 1.8), "res/kalajahangir",
+				100, 2, false, 4, 6, 15, 154, 5, 15, 10);
+			kalaJahangirSpawned = true;
+		}
 		std::cout << "Kala Jahangir spawn position: " << kalajahangir->getPosition().getX() << ", " << kalajahangir->getPosition().getY() << std::endl;
 	}
-	if (!kalajahangir->isDead)
-	handleJahangir();
+	if (kalajahangir && !kalajahangir->isDead)
+	{
+		handleJahangir();
+	}
 	else if (kalajahangir->isDead && !lvl1Completed)
 	{
 		lvl1Completed = true;
@@ -380,6 +389,47 @@ void update() {
 		narratives.emplace_back(narrative);
 		activeNarrativeIndex++;
 		for (auto& player : players) player.reset();
+	}
+
+	if (lvl1Completed && !initMap2)
+	{
+		initMap2 = true;
+		maps.emplace_back(std::make_shared<Map>("Level2", "res/maps/lvl2.png"));
+		activeMapIndex++;
+		deathCounter = 0;
+	}
+	if (initMap2 && !lvl2Narrative1Active)
+	{
+		lvl2Narrative1Active = true;
+		std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+		narrative->loadLevel2Narrative1();
+		narrative->narrativeActive = true;
+		narratives.emplace_back(narrative);
+		activeNarrativeIndex++;
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(300 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(200 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(100 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+	}
+	if (initMap2 && deathCounter >= 3)
+	{
+		if (!lvl2Narrative2Active)
+		{
+			lvl2Narrative2Active = true;
+			std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+			narrative->loadLevel2Narrative2();
+			narrative->narrativeActive = true;
+			narratives.emplace_back(narrative);
+			activeNarrativeIndex++;
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 12, 58, 3, 5));
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 12, 58, 3, 5));
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 12, 58, 3, 5));
+		}
 	}
 }
 

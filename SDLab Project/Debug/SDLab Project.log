@@ -1,27 +1,15 @@
-﻿Build started 2/15/2025 7:17:37 PM.
+﻿Build started 2/17/2025 2:19:00 AM.
      1>Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
          iMain.cpp
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(61): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(78): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(171): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(175): warning C4018: '<' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(187): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(54): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(70): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(228): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(232): warning C4018: '<' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(244): warning C4018: '>=' : signed/unsigned mismatch
      1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(1639): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-                 e:\cse\might-is-right-main\sdlab project\imain.cpp(302) : see reference to function template instantiation 'std::unique_ptr<Enemy,std::default_delete<Enemy>> std::make_unique<Enemy,const char(&)[8],Pos,Dim,const char(&)[13],int,int,bool,int,int,int,int>(const char (&)[8],Pos &&,Dim &&,const char (&)[13],int &&,int &&,bool &&,int &&,int &&,int &&,int &&)' being compiled
-     1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(932): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(1003) : see reference to function template instantiation 'std::_Ref_count_obj<_Ty>::_Ref_count_obj<const char(&)[9],Pos,Dim,const char(&)[17],int,int,bool,int,int,int,int,int,int,int>(const char (&)[9],Pos &&,Dim &&,const char (&)[17],int &&,int &&,bool &&,int &&,int &&,int &&,int &&,int &&,int &&,int &&)' being compiled
-                 with
-                 [
-                     _Ty=KalaJahangir
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(1003) : see reference to function template instantiation 'std::_Ref_count_obj<_Ty>::_Ref_count_obj<const char(&)[9],Pos,Dim,const char(&)[17],int,int,bool,int,int,int,int,int,int,int>(const char (&)[9],Pos &&,Dim &&,const char (&)[17],int &&,int &&,bool &&,int &&,int &&,int &&,int &&,int &&,int &&,int &&)' being compiled
-                 with
-                 [
-                     _Ty=KalaJahangir
-                 ]
-                 e:\cse\might-is-right-main\sdlab project\imain.cpp(372) : see reference to function template instantiation 'std::shared_ptr<KalaJahangir> std::make_shared<KalaJahangir,const char(&)[9],Pos,Dim,const char(&)[17],int,int,bool,int,int,int,int,int,int,int>(const char (&)[9],Pos &&,Dim &&,const char (&)[17],int &&,int &&,bool &&,int &&,int &&,int &&,int &&,int &&,int &&,int &&)' being compiled
+                 e:\cse\might-is-right-main\sdlab project\imain.cpp(337) : see reference to function template instantiation 'std::unique_ptr<Enemy,std::default_delete<Enemy>> std::make_unique<Enemy,const char(&)[8],Pos,Dim,const char(&)[13],int,int,bool,int,int,int,int>(const char (&)[8],Pos &&,Dim &&,const char (&)[13],int &&,int &&,bool &&,int &&,int &&,int &&,int &&)' being compiled
      1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(600): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
                  d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(723) : see reference to function template instantiation 'void std::allocator<_Ty>::construct<_Objty,int&,double,int&,int&>(_Objty *,int &,double &&,int &,int &)' being compiled
                  with
@@ -59,12 +47,12 @@
                  [
                      _Ty=Projectile
                  ]
-                 e:\cse\might-is-right-main\sdlab project\entity.h(740) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
+                 e:\cse\might-is-right-main\sdlab project\entity.h(741) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
                  with
                  [
                      _Ty=Projectile
                  ]
-                 e:\cse\might-is-right-main\sdlab project\entity.h(740) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
+                 e:\cse\might-is-right-main\sdlab project\entity.h(741) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
                  with
                  [
                      _Ty=Projectile
@@ -76,4 +64,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.98
+Time Elapsed 00:00:01.06

@@ -26,13 +26,17 @@ float scaleX = 2.4;
 float scaleY = 1.8;
 int deathCounter = 0;
 std::vector<std::shared_ptr<Narrative>> narratives;
-std::shared_ptr<KalaJahangir> kalajahangir;
+std::unique_ptr<KalaJahangir> kalajahangir;
+std::unique_ptr<KopaSamsu> kopasamsu;
 bool kalaJahangirSpawned = false;
+bool kopaSamsuSpawned = false;
 bool jahangirDead = false;
+bool kopaDead = false;
 bool lvl1enemySpawned = false;
 bool narrative2Active = false;
 bool narrative3Active = false;
 bool lvl1Completed = false;
+bool lvl2Completed = false;
 void playBGM()
 {
 	if (!mute && !musicPlaying)
@@ -94,6 +98,10 @@ void iDraw() {
 		if (kalaJahangirSpawned)
 		{
 			kalajahangir->render();
+		}
+		if (kopaSamsuSpawned)
+		{
+			kopasamsu->render();
 		}
 	}
 }
@@ -260,6 +268,13 @@ void iSpecialKeyboard(unsigned char key) {
 					}
 				}
 			}
+			if (kopasamsu && !kopasamsu->isDead)
+			{
+				if (players[activePlayerIndex].isColliding(*kopasamsu))
+				{
+					kopasamsu->takeDamage(25);
+				}
+			}
 		}
 	}
 }
@@ -293,15 +308,35 @@ void handleJahangir()
 		}
 	}
 }
+void handleKopa()
+{
+	kopasamsu->updateAnimation(0.05, players[activePlayerIndex]);
+	kopasamsu->moveTowardsPlayer(players[activePlayerIndex].getPosition());
+	kopasamsu->checkForAttack(players[activePlayerIndex]);
 
+	if (kopasamsu->isDead)
+	{
+		std::vector<KopaSamsu> vec;
+		vec.emplace_back(*kopasamsu);
+		for (auto it = vec.begin(); it != vec.end();)
+		{
+			it = vec.erase(it);
+		}
+	}
+}
 
+bool initMap2 = false;
+bool lvl2Narrative1Active = false;
+bool lvl2Narrative2Active = false;
+bool lvl2Narrative3Active = false;
+bool lvl2Narrative4Active = false;
 void update() {
 	playBGM();
 	// Spawn enemies if narrative is active and they haven't been spawned yet
 	if (narratives[activeNarrativeIndex]->narrativeActive && !lvl1enemySpawned) {
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, 15, 115)); // Melee skeleton
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 4, 15, 15, 115));  // Ranged skeleton
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 4, 15, 15, 115)); // Melee skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, 7, 115)); // Melee skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, 7, 115));  // Ranged skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, 7, 115)); // Melee skeleton
 		lvl1enemySpawned = true;
 	}
 
@@ -367,14 +402,14 @@ void update() {
 		// Update after adding to ensure it always remains valid
 		activeNarrativeIndex = narratives.size() - 1;
 		if (!kalajahangir) {
-			kalajahangir = std::make_shared<KalaJahangir>("Enforcer", Pos(400 * 2.4, 150 * 1.8),
+			kalajahangir = std::make_unique<KalaJahangir>("Enforcer", Pos(400 * 2.4, 150 * 1.8),
 				Dim(128 * 2.4, 128 * 1.8), "res/kalajahangir",
 				100, 2, false, 4, 6, 15, 154, 5, 15, 10);
 			kalaJahangirSpawned = true;
 		}
 		std::cout << "Kala Jahangir spawn position: " << kalajahangir->getPosition().getX() << ", " << kalajahangir->getPosition().getY() << std::endl;
 	}
-	if (kalajahangir && !kalajahangir->isDead)
+	if (kalajahangir && !kalajahangir->isDead && !narratives[activeNarrativeIndex]->narrativeActive)
 	{
 		handleJahangir();
 	}
@@ -383,6 +418,75 @@ void update() {
 		lvl1Completed = true;
 		std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
 		narrative->loadLevel1Narrative4();
+		narrative->narrativeActive = true;
+		narratives.emplace_back(narrative);
+		activeNarrativeIndex++;
+		for (auto& player : players) player.reset();
+	}
+
+	if (lvl1Completed && !initMap2)
+	{
+		initMap2 = true;
+		maps.emplace_back(std::make_shared<Map>("Level2", "res/maps/lvl2.png"));
+		activeMapIndex++;
+		deathCounter = 0;
+	}
+	if (initMap2 && !lvl2Narrative1Active)
+	{
+		lvl2Narrative1Active = true;
+		std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+		narrative->loadLevel2Narrative1();
+		narrative->narrativeActive = true;
+		narratives.emplace_back(narrative);
+		activeNarrativeIndex++;
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+		enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			"res/Satyr", 100, 2, false, 12, 4, 12, 58, 3, 5));
+	}
+	if (initMap2 && deathCounter >= 3)
+	{
+		if (!lvl2Narrative2Active)
+		{
+			lvl2Narrative2Active = true;
+			std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+			narrative->loadLevel2Narrative2();
+			narrative->narrativeActive = true;
+			narratives.emplace_back(narrative);
+			activeNarrativeIndex++;
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 7, 58, 3, 5));
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 7, 58, 3, 5));
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				"res/SatyrRanged", 100, 2, true, 12, 4, 7, 58, 3, 5));
+		}
+	}
+	if (initMap2 && deathCounter >= 6)
+	{
+		if (!lvl2Narrative3Active)
+		{
+			lvl2Narrative3Active = true;
+			std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+			narrative->loadLevel2Narrative3();
+			narrative->narrativeActive = true;
+			narratives.emplace_back(narrative);
+			activeNarrativeIndex++;
+			kopasamsu = std::make_unique<KopaSamsu>("Enforcer", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 2.4), "res/kopasamsu", 100, 2, false, 12, 15, 6, 100, 9, 20, 22);
+			kopaSamsuSpawned = true;
+		}
+	}
+	if (kopasamsu && !kopasamsu->isDead && !narratives[activeNarrativeIndex]->narrativeActive)
+	{
+		handleKopa();
+	}
+	if (kopasamsu->isDead && !lvl2Completed)
+	{
+		lvl2Completed = true;
+		std::shared_ptr<Narrative> narrative = std::make_shared<Narrative>();
+		narrative->loadLevel2Narrative4();
 		narrative->narrativeActive = true;
 		narratives.emplace_back(narrative);
 		activeNarrativeIndex++;

@@ -140,6 +140,7 @@ public:
 		this->HP = 100;
 		this->position.setX(200);
 		this->facingRight = true;
+		this->isDead = false;
 	}
 	bool getAttacking() { return isAttacking; }
 	Entity& operator=(Entity&& other) 
@@ -196,7 +197,8 @@ public:
 		hitSoundPath = soundPath;
 
 	}
-	bool isColliding(Entity& other) {
+
+	virtual bool isColliding(Entity& other) {
 		// Get this entity's position and dimensions
 		int x1 = position.getX();
 		int y1 = position.getY();
@@ -314,6 +316,7 @@ public:
 	}
 
 	virtual void attack() {
+		if (isDead) return;
 		if (!isAttacking) {
 			isAttacking = true;
 			playAttackSound();
@@ -707,13 +710,13 @@ public:
 		}
 		else {
 			// Move towards player if melee
-			if (getPosition().getX() < playerPos.getX()) {
+			if (getPosition().getX() < playerPos.getX() - 50.f) {
 				facingRight = true;  // Make sure enemy faces right when moving right
 				moveRight();
 				isMoving = true;  // Enemy is moving
 				isIdle = false;   // Ensure the enemy is not idle
 			}
-			else if (getPosition().getX() > playerPos.getX()) {
+			else if (getPosition().getX() > playerPos.getX() + 50.f) {
 				facingRight = false; // Make sure enemy faces left when moving left
 				moveLeft();
 				isMoving = true;  // Enemy is moving
@@ -743,15 +746,15 @@ public:
 		}
 	}
 	void checkForAttack(Entity& player) {
-		// Calculate the distance between the enemy and the player on the x-axis
-		float distanceToPlayer = std::abs(getPosition().getX() - player.getPosition().getX());
+    const float meleeAttackThreshold = 30.0f; // Minimum distance to trigger melee attack
 
-		// Only attack if the player is within range (e.g., 10px) and the enemy is not already attacking
-		if (distanceToPlayer <= 10.0f && !isAttacking) {
-			// Call the attack function if the enemy is close enough
-			attack();
-		}
-	}
+    float distanceToPlayer = std::abs(getPosition().getX() - player.getPosition().getX());
+
+    if (distanceToPlayer <= 70.0f * 2.4 && distanceToPlayer >= meleeAttackThreshold && !isAttacking) {
+        attack();
+    }
+}
+
 	void attack() override {
 		// Only initiate attack if not already attacking
 		if (!isAttacking) {
@@ -877,6 +880,115 @@ public:
 		for (int i = 0; i < 10; i++)
 		{
 			std::string path = "res/kalajahangir/death (" + std::to_string(i + 1) + ").png";
+			deathS.emplace_back(iLoadImage(const_cast<char*>(path.c_str())));
+		}
+		deathSprites = deathS;
+	}
+	void takeDamage(int damage) override
+	{
+		HP -= damage;
+		if (HP <= 0) {
+			HP = 0;
+			isDying = true;
+		}
+	}
+
+	void updateAnimation(double deltaTime, Entity& player) override
+	{
+		if (isDying)
+		{
+			deathSpriteIndex = (deathSpriteIndex + 1) % deathSpritesSize;
+			if (deathSpriteIndex == deathSpritesSize - 1) isDead = true;
+			return;
+		}
+
+		// Check if the enemy is attacking
+		if (isAttacking) {
+			attackTimer += deltaTime;
+			if (attackTimer >= attackDuration) {
+				isAttacking = false; // End attack animation
+				attackTimer = 0.0;
+			}
+			attackIndex = static_cast<int>((attackTimer / attackDuration) * totalAttackFrames);
+			if (attackIndex == attackIndexDmg && isColliding(player)) {
+				player.takeDamage(damage); // Apply damage
+				std::cout << "Player takes damage from melee attack at frame " << attackIndex << std::endl;
+			}
+		}
+		// Handle movement animation
+		else if (isMoving) {
+			moveIndex = (moveIndex + 1) % totalWalkFrames;
+		}
+		else {
+			moveIndex = 0;  // Reset to idle frame
+		}
+	}
+
+	void render() override {
+		if (isDead) return;
+		if (isDying)
+		{
+			iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), deathSprites[deathSpriteIndex]);
+			return;
+		}
+		// Check if the enemy is attacking
+		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
+		if (isAttacking) {
+			if (facingRight) {
+				// Normal attack sprite when facing right
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+			else {
+				// Flip attack sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+		}
+		// If not attacking, show the movement or idle sprite
+		else if (isMoving) {
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+			else {
+				// Flip walking sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+		}
+		else {
+			// Idle sprite (also flipped if facing left)
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+			else {
+				// Flip idle sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+		}
+
+		// Render projectiles
+		renderProjectiles();
+	}
+};
+
+class KopaSamsu : public Enemy
+{
+public:
+	std::vector<int> deathSprites;
+	int deathSpritesSize;
+	int deathSpriteIndex = 0;
+	bool isDying = false;
+
+	KopaSamsu(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
+		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
+		int damage, int death_sprites_size)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, attackDuration, offSetX,
+		attackIndexDmg, damage),
+		deathSpritesSize(death_sprites_size)
+	{
+		isDead = false;
+		std::vector<int> deathS;
+		for (int i = 0; i < 22; i++)
+		{
+			std::string path = "res/KopaSamsu/death (" + std::to_string(i + 1) + ").png";
 			deathS.emplace_back(iLoadImage(const_cast<char*>(path.c_str())));
 		}
 		deathSprites = deathS;
