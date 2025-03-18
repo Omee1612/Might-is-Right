@@ -28,8 +28,8 @@ bool credsClicked = false;
 int credsImage;
 int gameEndSprite;
 // Scale Position
-float scaleX = 2.4;
-float scaleY = 1.8;
+float scaleX = 1;
+float scaleY = 1;
 int deathCounter = 0;
 std::vector<std::shared_ptr<Narrative>> narratives;
 std::unique_ptr<KalaJahangir> kalajahangir;
@@ -81,19 +81,19 @@ void checkMenu()
 {
 	if (activeMenuIndex == 0)
 	{
-		iShowImage(0, 0, 1920, 1080, menuImages[0]);
+		iShowImage(0, 0, 800, 600, menuImages[0]);
 	}
 	if (activeMenuIndex == 1)
 	{
-		iShowImage(0, 0, 1920, 1080, menuImages[1]);
+		iShowImage(0, 0, 800, 600, menuImages[1]);
 	}
 	if (activeMenuIndex == 2)
 	{
-		iShowImage(0, 0, 1920, 1080, menuImages[2]);
+		iShowImage(0, 0, 800, 600, menuImages[2]);
 	}
 	if (activeMenuIndex == 3)
 	{
-		iShowImage(0, 0, 1920, 1080, menuImages[3]);
+		iShowImage(0, 0, 800, 600, menuImages[3]);
 	}
 }
 
@@ -103,7 +103,7 @@ void iDraw() {
 		checkMenu();
 		if (credsClicked)
 		{
-			iShowImage(0, 0, 1920, 1080, credsImage);
+			iShowImage(0, 0, 800, 600, credsImage);
 		}
 	}
 	else if (narratives[activeNarrativeIndex]->narrativeActive) {
@@ -114,12 +114,12 @@ void iDraw() {
 	else if (gameActive) {
 		if (gameOver)
 		{
-			iShowImage(0, 0, 1920, 1080, gameOverSprite);
+			iShowImage(0, 0, 800, 600, gameOverSprite);
 			return;
 		}
 		if (gameEnd)
 		{
-			iShowImage(0, 0, 1920, 1080, gameEndSprite);
+			iShowImage(0, 0, 800, 600, gameEndSprite);
 			return;
 		}
 		maps[activeMapIndex]->render();
@@ -188,15 +188,15 @@ void iMouseMove(int mx, int my)
 //*******************************************************************ipassiveMouse***********************************************************************//
 void iPassiveMouseMove(int mx, int my)
 {
-	if ((mx > 360 * 2.4 && my > 388 * 1.8) && (mx < 440 * 2.4 && my < 406 * 1.8))
+	if ((mx > 360 && my > 388) && (mx < 440  && my < 406 ))
 	{
 		activeMenuIndex = 0;
 	}
-	else if ((mx > 323 * 2.4 && my > 309 * 1.8) && (mx < 470 * 2.4 && my < 331 * 1.8))
+	else if ((mx > 323  && my > 309 ) && (mx < 470  && my < 331 ))
 	{
 		activeMenuIndex = 1;
 	}
-	else if ((mx > 357 * 2.4 && my > 232 * 1.8) && (mx < 440 * 2.4 && my < 255 * 1.8))
+	else if ((mx > 357 && my > 232 ) && (mx < 440  && my < 255 ))
 	{
 		activeMenuIndex = 2;
 	}
@@ -213,25 +213,25 @@ void iMouse(int button, int state, int mx, int my)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		if ((mx > 360 * 2.4 && my > 388 * 1.8) && (mx < 440 * 2.4 && my < 406 * 1.8) ||
-			(mx > 323 * 2.4 && my > 309 * 1.8) && (mx < 470 * 2.4 && my < 331 * 1.8) ||
-			(mx > 357 * 2.4 && my > 232 * 1.8) && (mx < 440 * 2.4 && my < 255 * 1.8) || ((mx > 56 * 2.4 && my > 72 * 1.8) && (mx <93 * 2.4 && my <100 * 1.8)))
+		if ((mx > 360  && my > 388 ) && (mx < 440 * 1 && my < 406 * 1) ||
+			(mx > 323 * 1 && my > 309 * 1) && (mx < 470 * 1 && my < 331 * 1) ||
+			(mx > 357 * 1 && my > 232 * 1) && (mx < 440 * 1 && my < 255 * 1) || ((mx > 56 * 1 && my > 72 * 1) && (mx <93 * 1 && my <100 * 1)))
 		{
 			PlaySound("music\\click", NULL, SND_ASYNC);
 			musicPlaying = false;
 		}
-		if ((mx > 360 * 2.4 && my > 388 * 1.8) && (mx < 440 * 2.4 && my < 406 * 1.8))
+		if ((mx > 360 * 1 && my > 388 * 1) && (mx < 440 * 1 && my < 406 * 1))
 		{
 			menuActive = false;
 			gameActive = true;
 			musicPlaying = true;
 		}
-		else if ((mx > 323 * 2.4 && my > 309 * 1.8) && (mx < 470 * 2.4 && my < 331 * 1.8))
+		else if ((mx > 323 * 1 && my > 309 * 1) && (mx < 470 * 1 && my < 331 * 1))
 		{
 			credsClicked = true;
 		}
 		std::cout << mx << "," << my << "\n";
-		if ((mx > 56 * 2.4 && my > 72 * 1.8) && (mx < 93 * 2.4 && my < 100 * 1.8))
+		if ((mx > 56 * 1 && my > 72 * 1) && (mx < 93 * 1 && my < 100 * 1))
 		{
 			switch (mute)
 			{
@@ -312,7 +312,7 @@ void iSpecialKeyboard(unsigned char key) {
 		}
 		if (key == GLUT_KEY_UP)
 		{
-			players[activePlayerIndex].jump(45.0f, 35.0f*1.8);
+			players[activePlayerIndex].jump(45.0f, 35.0f*1);
 		}
 		if (key == GLUT_KEY_INSERT)
 		{
@@ -524,7 +524,7 @@ void handleBoltu()
 }
 void handleOmega()
 {
-	omega->updateAnimation(0.05, players[activePlayerIndex]);
+	omega->updateAnimation(0.03, players[activePlayerIndex]);
 	omega->moveTowardsPlayer(players[activePlayerIndex].getPosition());
 	omega->checkForAttack(players[activePlayerIndex]);
 }
@@ -553,9 +553,9 @@ void update()
 
 	// Spawn enemies if narrative is active and they haven't been spawned yet
 	if (narratives[activeNarrativeIndex]->narrativeActive && !lvl1enemySpawned) {
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 115)); // Melee skeleton
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 115));  // Ranged skeleton
-		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 115)); // Melee skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 48)); // Melee skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 48));  // Ranged skeleton
+		enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(700 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeleton", 100, 2, true, 5, 15, "music/skeleton",7, 48)); // Melee skeleton
 		lvl1enemySpawned = true;
 	}
 
@@ -655,9 +655,9 @@ void update()
 		narrative->narrativeActive = true;
 		narratives.emplace_back(narrative);
 		activeNarrativeIndex++;
-		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeletonmelee", 100, 2, false, 6, 4, "music/spear",15, 163, 3, 5));
-		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(600 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeletonmelee", 100, 2, false, 6, 4,"music/spear", 15, 163, 3, 5));
-		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeletonmelee", 100, 2, false, 6, 4, "music/spear",15, 163, 3, 5));
+		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(400 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeletonmelee", 100, 2, false, 6, 4, "music/spear",15, 68, 3, 5));
+		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(600 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeletonmelee", 100, 2, false, 6, 4,"music/spear", 15, 68, 3, 5));
+		enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeletonmelee", 100, 2, false, 6, 4, "music/spear",15, 68, 3, 5));
 	}
 
 	if (deathCounter >= 6 && !narrative3Active) {
@@ -670,9 +670,9 @@ void update()
 		// Update after adding to ensure it always remains valid
 		activeNarrativeIndex = narratives.size() - 1;
 		if (!kalajahangir) {
-			kalajahangir = std::make_unique<KalaJahangir>("Enforcer", Pos(400 * 2.4, 150 * 1.8),
-				Dim(128 * 2.4, 128 * 1.8), "res/kalajahangir",
-				100, 2, false, 4, 6, 15, 154, 1, 15, 10,"music/jahangir");
+			kalajahangir = std::make_unique<KalaJahangir>("Enforcer", Pos(400 * 1, 150 * 1),
+				Dim(128 * 1, 128 * 1), "res/kalajahangir",
+				100, 2, false, 4, 6, 15, 64, 1, 15, 10,"music/jahangir");
 			kalaJahangirSpawned = true;
 		}
 		std::cout << "Kala Jahangir spawn position: " << kalajahangir->getPosition().getX() << ", " << kalajahangir->getPosition().getY() << std::endl;
@@ -705,11 +705,11 @@ void update()
 		narrative->narrativeActive = true;
 		narratives.emplace_back(narrative);
 		activeNarrativeIndex++;
-		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 			"res/Satyr", 100, 2, false, 12, 4, "music/Satyr",12, 58, 3, 5));
-		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 			"res/Satyr", 100, 2, false, 12, 4, "music/Satyr",12, 58, 3, 5));
-		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(100 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 			"res/Satyr", 100, 2, false, 12, 4, "music/Satyr",12, 58, 3, 5));
 	}
 	if (initMap2 && deathCounter >= 3) {
@@ -720,11 +720,11 @@ void update()
 			narrative->narrativeActive = true;
 			narratives.emplace_back(narrative);
 			activeNarrativeIndex++;
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/SatyrRanged", 100, 2, true, 12, 4, "music/Satyr", 7, 58, 3, 5));
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(700 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(700 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/SatyrRanged", 100, 2, true, 12, 4, "music/Satyr", 7, 58, 3, 5));
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/SatyrRanged", 100, 2, true, 12, 4, "music/Satyr", 7, 58, 3, 5));
 		}
 	}
@@ -737,7 +737,7 @@ void update()
 			narrative->narrativeActive = true;
 			narratives.emplace_back(narrative);
 			activeNarrativeIndex++;
-			kopasamsu = std::make_unique<KopaSamsu>("Enforcer", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/kopasamsu", 100, 2, false, 12, 15, 6, 100, 9, 20, 22,"Music/kopa");
+			kopasamsu = std::make_unique<KopaSamsu>("Enforcer", Pos(400 * 1, 150 * 1), Dim(256 * 1, 256 * 1), "res/kopasamsu", 100, 2, false, 12, 15, 6, 100, 9, 20, 22,"Music/kopa");
 			kopaSamsuSpawned = true;
 		}
 	}
@@ -770,9 +770,9 @@ void update()
 		narrative->narrativeActive = true;
 		narratives.emplace_back(narrative);
 		activeNarrativeIndex++;
-		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+		enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(100 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 			"res/Ogre", 100, 6, false, 6, 12, "Music/ogre",6, 77, 9, 10));
-		enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+		enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 			"res/wizard", 100, 2, true, 6, 4, "Music/borka",7, 77, 3, 8));
 	}
 	if (initMap3 && deathCounter >= 2)
@@ -785,15 +785,15 @@ void update()
 			narrative->narrativeActive = true;
 			narratives.emplace_back(narrative);
 			activeNarrativeIndex++;
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/wizard", 100, 2, true, 6, 4, "Music/borka", 7, 77, 3, 8));
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/wizard", 100, 2, true, 6, 4, "Music/borka", 7, 77, 3, 8));
-			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/wizard", 100, 2, true, 6, 4, "Music/borka", 7, 77, 3, 8));
-			enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(400 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/Ogre", 100, 6, false, 6, 12, "Music/ogre", 6, 77, 9, 10));
-			enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/Ogre", 100, 6, false, 6, 12, "Music/ogre", 6, 77, 9, 10));
 		}
 		if (initMap3 && deathCounter >= 7)
@@ -806,10 +806,10 @@ void update()
 				narrative->narrativeActive = true;
 				narratives.emplace_back(narrative);
 				activeNarrativeIndex++;
-				chakku = std::make_unique<ChakkuMojumder>("Duelist", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				chakku = std::make_unique<ChakkuMojumder>("Duelist", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/chakkumojumder", 100, 4, false, 8, 10, 15, 74,
 					7, 15, 10,"Music/chakku");
-				boltu = std::make_unique<Boltu>("Tactician", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				boltu = std::make_unique<Boltu>("Tactician", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/Boltu", 100, 4, true, 4, 8, 20, 60,
 					3, 15, 7,"Music/boltu");
 				boltuChakkuSpawned = true;
@@ -848,11 +848,11 @@ void update()
 			narrative->narrativeActive = true;
 			narratives.emplace_back(narrative);
 			activeNarrativeIndex++;
-			enemies.emplace_back(std::make_unique<Enemy>("Duelist", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 2.4), "res/kalajahangir", 
+			enemies.emplace_back(std::make_unique<Enemy>("Duelist", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/kalajahangir", 
 				100, 8, false, 4, 6, "music/jahangir", 100, 2, 5));
-			enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+			enemies.push_back(std::make_unique<Enemy>("Duelist", Pos(400 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 				"res/skeletonmelee", 100, 2, false, 6, 4, "music/spear", 15, 163, 3, 5));
-			enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/skeleton", 100, 2, true, 
+			enemies.push_back(std::make_unique<Enemy>("Shooter", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/skeleton", 100, 2, true, 
 				5, 15, "music/skeleton", 7, 115)); // Melee skeleton
 		}
 		if (initMap4 && deathCounter >= 3)
@@ -865,11 +865,11 @@ void update()
 				narrative->narrativeActive = true;
 				narratives.emplace_back(narrative);
 				activeNarrativeIndex++;
-				enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 2.4), "res/kopasamsu",
+				enemies.emplace_back(std::make_unique<Enemy>("Enforcer", Pos(200 * 1, 150 * 1), Dim(256 * 1, 256 * 1), "res/kopasamsu",
 					100, 8, false, 4, 6, "music/kopa", 100, 2, 5));
-				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(100 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/SatyrRanged", 100, 2, true, 12, 4, "music/Satyr", 7, 58, 3, 5));
-				enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/Satyr", 100, 2, false, 12, 4, "music/Satyr", 12, 58, 3, 5));
 			}
 		}
@@ -883,13 +883,13 @@ void update()
 				narrative->narrativeActive = true;
 				narratives.emplace_back(narrative);
 				activeNarrativeIndex++;
-				enemies.emplace_back(std::make_unique<Enemy>("Duelist", Pos(200 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 2.4), "res/chakkumojumder",
+				enemies.emplace_back(std::make_unique<Enemy>("Duelist", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/chakkumojumder",
 					100, 8, false, 4, 6, "music/chakku", 100, 2, 5));
-				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 2.4), "res/boltu",
+				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(400 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/boltu",
 					100, 8, true, 4, 6, "music/boltu", 100, 2, 5));
-				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				enemies.emplace_back(std::make_unique<Enemy>("Shooter", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/wizard", 100, 2, true, 6, 4, "Music/borka", 7, 77, 3, 8));
-				enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(500 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8),
+				enemies.emplace_back(std::make_unique<Enemy>("Tactician", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/Ogre", 100, 6, false, 6, 12, "Music/ogre", 6, 77, 9, 10));
 			}
 		}
@@ -903,7 +903,7 @@ void update()
 				narrative->narrativeActive = true;
 				narratives.emplace_back(narrative);
 				activeNarrativeIndex++;
-				omega = std::make_unique<Omega>("Omega", Pos(300 * 2.4, 150 * 1.8), Dim(128 * 2.4, 128 * 1.8), "res/omega", 200, 15, false, 8,
+				omega = std::make_unique<Omega>("Omega", Pos(300 * 1, 150 * 1), Dim(128 * 1, 128 * 1), "res/omega", 200, 15, false, 8,
 					3, 6, 58, 1, 30, 6, "Music/omega");
 				omegaSpawned = true;
 			}
@@ -939,13 +939,13 @@ void loadPlayersBlockSprites()
 int main() {
 	iSetTimer(100, update);
 	iSetTimer(150, checkPlayerDeath);
-	iInitialize(1920, 1080, "Project Title");
+	iInitialize(800, 600, "Project Title");
 	std::shared_ptr<Narrative> narrative = std::make_unique<Narrative>();
 	maps.emplace_back(std::make_shared<Map>("Level1", "res/maps/lvl1.jpg"));
-	players.emplace_back("Omee", Pos(100 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8), "res/player1movement");
-	players.emplace_back("Aiyan", Pos(100 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8), "res/player2movement");
-	players.emplace_back("Tirtha", Pos(100 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8), "res/player3movement");
-	players.emplace_back("Razi", Pos(100 * 2.4, 150 * 1.8), Dim(64 * 2.4, 64 * 1.8), "res/player4movement");
+	players.emplace_back("Omee", Pos(100 * 1, 150 * 1), Dim(64 * 1, 64 * 1), "res/player1movement");
+	players.emplace_back("Aiyan", Pos(100 * 1, 150 * 1), Dim(64 * 1, 64 * 1), "res/player2movement");
+	players.emplace_back("Tirtha", Pos(100 * 1, 150 * 1), Dim(64 * 1, 64 * 1), "res/player3movement");
+	players.emplace_back("Razi", Pos(100 * 1, 150 * 1), Dim(64 * 1, 64 * 1), "res/player4movement");
 	players[0].specialSprite = iLoadImage("res/player1movement/special.png");
 	players[1].specialSprite = iLoadImage("res/player2movement/special.png");
 	players[2].specialSprite = iLoadImage("res/player3movement/special.png");
@@ -954,8 +954,8 @@ int main() {
 	players[3].isRanged = true;
 	players[2].projectileSprite = iLoadImage("res/player3movement/projectile.png");
 	players[3].projectileSprite = iLoadImage("res/player4movement/projectile.png");
-	players[2].projectileSpeed = 180 * 2.4;
-	players[3].projectileSpeed = 120 * 2.4;
+	players[2].projectileSpeed = 180 * 1;
+	players[3].projectileSpeed = 120 * 1;
 	menuImages.emplace_back(iLoadImage("res/playHighlight.png"));
 	menuImages.emplace_back(iLoadImage("res/creditsHighlight.png"));
 	menuImages.emplace_back(iLoadImage("res/exitHighlight.png"));

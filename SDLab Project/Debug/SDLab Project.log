@@ -1,62 +1,15 @@
-﻿Build started 3/19/2025 12:37:38 AM.
+﻿Build started 3/19/2025 2:48:05 AM.
      1>Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
          iMain.cpp
      1>e:\cse\might-is-right-main\sdlab project\narrative.h(54): warning C4018: '>=' : signed/unsigned mismatch
      1>e:\cse\might-is-right-main\sdlab project\narrative.h(70): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(372): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(376): warning C4018: '<' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(388): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(371): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(375): warning C4018: '<' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(387): warning C4018: '>=' : signed/unsigned mismatch
      1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(1639): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
                  e:\cse\might-is-right-main\sdlab project\imain.cpp(556) : see reference to function template instantiation 'std::unique_ptr<Enemy,std::default_delete<Enemy>> std::make_unique<Enemy,const char(&)[8],Pos,Dim,const char(&)[13],int,int,bool,int,int,const char(&)[15],int,int>(const char (&)[8],Pos &&,Dim &&,const char (&)[13],int &&,int &&,bool &&,int &&,int &&,const char (&)[15],int &&,int &&)' being compiled
-     1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(600): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(723) : see reference to function template instantiation 'void std::allocator<_Ty>::construct<_Objty,int&,double,int&,int&>(_Objty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-         ,            _Objty=Projectile
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(723) : see reference to function template instantiation 'void std::allocator<_Ty>::construct<_Objty,int&,double,int&,int&>(_Objty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-         ,            _Objty=Projectile
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(872) : see reference to function template instantiation 'void std::allocator_traits<_Alloc>::construct<_Ty,int&,double,int&,int&>(std::allocator<_Ty> &,_Objty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Alloc=std::allocator<Projectile>
-         ,            _Ty=Projectile
-         ,            _Objty=Projectile
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\xmemory0(872) : see reference to function template instantiation 'void std::allocator_traits<_Alloc>::construct<_Ty,int&,double,int&,int&>(std::allocator<_Ty> &,_Objty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Alloc=std::allocator<Projectile>
-         ,            _Ty=Projectile
-         ,            _Objty=Projectile
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\vector(899) : see reference to function template instantiation 'void std::_Wrap_alloc<std::allocator<_Ty>>::construct<Projectile,int&,double,int&,int&>(_Ty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-                 ]
-                 d:\program files (x86)\microsoft visual studio 12.0\vc\include\vector(899) : see reference to function template instantiation 'void std::_Wrap_alloc<std::allocator<_Ty>>::construct<Projectile,int&,double,int&,int&>(_Ty *,int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-                 ]
-                 e:\cse\might-is-right-main\sdlab project\entity.h(786) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-                 ]
-                 e:\cse\might-is-right-main\sdlab project\entity.h(786) : see reference to function template instantiation 'void std::vector<Projectile,std::allocator<_Ty>>::emplace_back<int&,double,int&,int&>(int &,double &&,int &,int &)' being compiled
-                 with
-                 [
-                     _Ty=Projectile
-                 ]
        Link:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\CSE\Might-is-Right-main\Debug\SDLab Project.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\CSE\Might-is-Right-main\Debug\SDLab Project.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\CSE\Might-is-Right-main\Debug\SDLab Project.lib" /MACHINE:X86 Debug\iMain.obj
          SDLab Project.vcxproj -> E:\CSE\Might-is-Right-main\Debug\SDLab Project.exe
@@ -64,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.48
+Time Elapsed 00:00:01.15

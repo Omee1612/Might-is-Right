@@ -43,7 +43,7 @@ public:
 		position.setY(position.getY() + velocityY * deltaTime);
 
 		// Deactivate the projectile if it goes off-screen
-		if (position.getX() < 0 || position.getX() > 1920 || position.getY() < 0 || position.getY() > 1080) {
+		if (position.getX() < 0 || position.getX() > 800 || position.getY() < 0 || position.getY() > 600) {
 			isActive = false;
 		}
 	}
@@ -80,7 +80,7 @@ public:
 	int HP = 100;
 	bool isJumping = false;
 	bool isRanged = false; // Whether the entity is ranged
-	float projectileSpeed = 50.0f*2.4; // Speed of the projectiles
+	float projectileSpeed = 50.0f*1; // Speed of the projectiles
 	int projectileSprite; // Sprite for the projectile
 	std::vector<PlayerProjectile> projectiles; // List of active projectiles
 	float jumpVelocityX = 0.0f;
@@ -260,11 +260,11 @@ public:
 
 		// Adjust the collision box based on offsetX and facing direction
 		if (other.facingRight) {
-			ex1 += other.offSetX;
-			eWidth -= other.offSetX;
+			ex1 += 0;
+			eWidth -= 0;
 		}
 		else {
-			eWidth -= other.offSetX;
+			eWidth -= 0;
 		}
 
 		// Get this entity's position and dimensions
@@ -361,7 +361,7 @@ public:
 		}
 		if (isSpecial)
 		{
-			iShowImage(specialX, 300, 400, 300, specialSprite);
+			iShowImage(specialX, 125, 167, 125, specialSprite);
 		}
 	}
 	void specialAttack(Entity& entity)
@@ -411,8 +411,8 @@ public:
 				position.setX(0);
 				jumpVelocityX = 0;  // Stop horizontal movement at the boundary
 			}
-			if (position.getX() + dimension.getWidth() > 1920) {
-				position.setX(1920 - dimension.getWidth());
+			if (position.getX() + dimension.getWidth() > 800) {
+				position.setX(800 - dimension.getWidth());
 				jumpVelocityX = 0;  // Stop horizontal movement at the boundary
 			}
 
@@ -443,10 +443,10 @@ public:
 	void moveRight() {
 		facingRight = true;
 		movingRight = true;
-		if (position.getX() + dimension.getWidth() < 1920) {
+		if (position.getX() + dimension.getWidth() < 800) {
 			// Allow movement during jump
 			if (!isJumping) {
-				position.setX(position.getX() + 5 * 2.4);
+				position.setX(position.getX() + 5 * 1);
 			}
 			isIdle = false;
 		}
@@ -458,7 +458,7 @@ public:
 		if (position.getX() > 0) {
 			// Allow movement during jump
 			if (!isJumping) {
-				position.setX(position.getX() - 5 * 2.4);
+				position.setX(position.getX() - 5 * 1);
 			}
 			isIdle = false;
 		}
@@ -507,7 +507,7 @@ public:
 	{
 		const Pos p(0, 0);
 		this->pos = p;
-		const Dim d(1920, 1080);
+		const Dim d(800, 600);
 		this->dim = d;
 		mapID = iLoadImage(const_cast<char*>(mapPath.c_str()));
 	}
@@ -579,7 +579,7 @@ public:
 
 		// Get the leftmost side of the projectileint projLeft = x;
 		int projTop = y;
-		int projBottom = y + 32 * 1.8;
+		int projBottom = y + 32 * 1;
 		int projLeft = x;
 
 		// Get the target entity's bounding box
@@ -597,11 +597,11 @@ public:
 	}
 
 	bool isOutOfBounds() const {
-		return (x < 0 || x > 1920);
+		return (x < 0 || x > 800);
 	}
 
 	void render() {
-		iShowImage(x, y, 32 * 2.4, 32 * 1.8, sprite); // Render the projectile
+		iShowImage(x, y, 32 * 1, 32 * 1, sprite); // Render the projectile
 	}
 };
 
@@ -677,12 +677,12 @@ public:
 
 		if (facingRight) {
 			// If facing right, offsetX is added to the left side of the sprite
-			adjustedX1 += offSetX;
-			adjustedWidth1 -= offSetX;
+			adjustedX1 += 0;
+			adjustedWidth1 -= 0;
 		}
 		else {
 			// If facing left, offsetX is added to the right side of the sprite
-			adjustedWidth1 -= offSetX;
+			adjustedWidth1 -= 0;
 		}
 
 		// Perform collision detection with the adjusted collision box
@@ -727,7 +727,7 @@ public:
 			// Check if enemy is within range of the player (let’s say 50px)
 			const float rangeThreshold = 50.0f;
 			if (facingRight) {
-				if (getPosition().getX() < playerPos.getX() - 400 * 2.4 - rangeThreshold) {
+				if (getPosition().getX() < playerPos.getX() - 200 * 1 - rangeThreshold) {
 					moveRight();
 					isMoving = true;  // Enemy is moving
 					isIdle = false;   // Ensure the enemy is not idle
@@ -739,7 +739,7 @@ public:
 				}
 			}
 			else {
-				if (getPosition().getX() > playerPos.getX() + 400 * 2.4 + rangeThreshold) {
+				if (getPosition().getX() > playerPos.getX() + 400 * 1 + rangeThreshold) {
 					moveLeft();
 					isMoving = true;  // Enemy is moving
 					isIdle = false;   // Ensure the enemy is not idle
@@ -781,9 +781,9 @@ public:
 
 			// Create a new projectile based on the enemy's facing direction
 			int projX = facingRight ? getPosition().getX() + dimension.getWidth() : getPosition().getX();
-			int projSpeed = facingRight ? 21 * 2.4 : -21 * 2.4;  // Make the projectile move in the correct direction
+			int projSpeed = facingRight ? 21 * 1 : -21 * 1;  // Make the projectile move in the correct direction
 
-			projectiles.emplace_back(projX, getPosition().getY() + 18 * 1.8, projSpeed, projectileSprite);
+			projectiles.emplace_back(projX, getPosition().getY() + 18 * 1, projSpeed, projectileSprite);
 
 			shootTimer = 0.0f;  // Reset shoot timer after shooting
 			PlaySound(hitSoundPath.c_str(), NULL, SND_ASYNC);
@@ -794,7 +794,7 @@ public:
 
 		float distanceToPlayer = std::abs(getPosition().getX() - player.getPosition().getX());
 
-		if (distanceToPlayer <= 70.0f * 2.4 && distanceToPlayer >= meleeAttackThreshold && !isAttacking) {
+		if (distanceToPlayer <= 70.0f * 1 && distanceToPlayer >= meleeAttackThreshold && !isAttacking) {
 			attack();
 		}
 	}

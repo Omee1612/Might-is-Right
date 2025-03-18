@@ -72,17 +72,17 @@ public:
 		int speaker = activeSpeakers[currentSpeakerIndex];
 
 		// Draw speech box first
-		iShowImage(0, 10, 1920, 120 * 1.8, speechBox);
+		iShowImage(0, 10, 800, 120 * 1, speechBox);
 
 		// Draw character portrait
-		iShowImage(10, 50, 128 * 2.4, 128 * 1.8, speaker);
+		iShowImage(10, 50, 128 * 1, 128 * 1, speaker);
 
 		// Set text color (Make sure it's visible)
 		iSetColor(255, 255, 255); // White text for contrast
 
 		// Display text AFTER images
 		std::string text = activeDialogues[speaker][dialogueIndex];
-		iText(textPosX * 2.4, textPosY * 1.8, const_cast<char*>(text.c_str()), GLUT_BITMAP_HELVETICA_18);
+		iText(textPosX * 1, textPosY * 1, const_cast<char*>(text.c_str()), GLUT_BITMAP_HELVETICA_18);
 	}
 	void loadLevel1Narrative()
 	{
