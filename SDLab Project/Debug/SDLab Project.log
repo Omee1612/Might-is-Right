@@ -1,13 +1,13 @@
-﻿Build started 3/19/2025 2:48:05 AM.
+﻿Build started 3/19/2025 3:35:35 AM.
      1>Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
          iMain.cpp
      1>e:\cse\might-is-right-main\sdlab project\narrative.h(54): warning C4018: '>=' : signed/unsigned mismatch
      1>e:\cse\might-is-right-main\sdlab project\narrative.h(70): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(371): warning C4018: '>=' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(375): warning C4018: '<' : signed/unsigned mismatch
-     1>e:\cse\might-is-right-main\sdlab project\narrative.h(387): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(372): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(376): warning C4018: '<' : signed/unsigned mismatch
+     1>e:\cse\might-is-right-main\sdlab project\narrative.h(388): warning C4018: '>=' : signed/unsigned mismatch
      1>d:\program files (x86)\microsoft visual studio 12.0\vc\include\memory(1639): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
                  e:\cse\might-is-right-main\sdlab project\imain.cpp(556) : see reference to function template instantiation 'std::unique_ptr<Enemy,std::default_delete<Enemy>> std::make_unique<Enemy,const char(&)[8],Pos,Dim,const char(&)[13],int,int,bool,int,int,const char(&)[15],int,int>(const char (&)[8],Pos &&,Dim &&,const char (&)[13],int &&,int &&,bool &&,int &&,int &&,const char (&)[15],int &&,int &&)' being compiled
        Link:
@@ -17,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.15
+Time Elapsed 00:00:01.36

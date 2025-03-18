@@ -808,7 +808,7 @@ void update()
 				activeNarrativeIndex++;
 				chakku = std::make_unique<ChakkuMojumder>("Duelist", Pos(200 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/chakkumojumder", 100, 4, false, 8, 10, 15, 74,
-					7, 15, 10,"Music/chakku");
+					3, 15, 10,"Music/chakku");
 				boltu = std::make_unique<Boltu>("Tactician", Pos(500 * 1, 150 * 1), Dim(128 * 1, 128 * 1),
 					"res/Boltu", 100, 4, true, 4, 8, 20, 60,
 					3, 15, 7,"Music/boltu");

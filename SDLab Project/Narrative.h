@@ -284,11 +284,11 @@ public:
 	{
 		std::map<int, std::vector<std::string>> levelDialogue = {
 			{ tirthoImage, { "mamo castle te ber hoite na hoitei dehi abar genjam" } },
-			{ aiyanImage, { "mama edire na age mere ashsi je game banaise tar mone hoy creativity eitukei shesh" } },
+			{ aiyanImage, { "eitare to agei marlam idea ki shesh naki" } },
 			{ raziImage, { "u r absolutely right this is boring & repetitive" } },
 			{ omeeImage, { "*** ******** **** *** ******* ** " } }
 		};
-		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage, raziImage };
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage };
 		narratives.push_back(levelDialogue);
 		speakerOrders.push_back(levelSpeakers);
 		activeNarrativeIndex = narratives.size() - 1;
