@@ -190,10 +190,10 @@ public:
 		std::map<int, std::vector<std::string>> levelDialogue = {
 			{ aiyanImage, { "e bai ei daa boti niye ke aise" } },
 			{ tirthoImage, { "magoma kolla kati dibe" } },
-			{ raziImage, { "it is all right frendz i am sure we can reason with this person" } },
-			{ omeeImage, { "reason korte gele tomar lulli kaite dibe bhodai" } }
+			{ raziImage, { "it is all right frendz we can reason with this person" } },
+			{ omeeImage, { "aise british reason maraite" } }
 		};
-		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage , raziImage, omeeImage };
+		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage, raziImage, omeeImage };
 		narratives.push_back(levelDialogue);
 		speakerOrders.push_back(levelSpeakers);
 		activeNarrativeIndex = narratives.size() - 1;
@@ -204,10 +204,154 @@ public:
 	void loadLevel2Narrative4()
 	{
 		std::map<int, std::vector<std::string>> levelDialogue = {
-			{ aiyanImage, { "mama icecream goilla gelo" } },
-			{ tirthoImage, { "kha tui oidi boya" } },
-			{ raziImage, { "can we please get outof here the mosquitos are killing me" } },
+			{ aiyanImage, { "mama oi to chaai hoya gelo" } },
+			{ tirthoImage, { "bro is cooked fr" } },
+			{ raziImage, { "whot do you mean we are not cooking anything" } },
 			{ omeeImage, { "tui ingrezi kowa bondho kor bangal" } }
+		};
+		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel3Narrative1()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ tirthoImage, { "background ta to shei chobi bhalo uthbo eikhane" } },
+			{ aiyanImage, { "ho iphone ta bair kor" } },
+			{ raziImage, { "but we do not have any camera stupid" } },
+			{ omeeImage, { "age shamne pise ki aise dekh bhodai" } }
+		};
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel3Narrative2()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ tirthoImage, { "edi to bohut genjaimma" } },
+			{ aiyanImage, { "e bhai dekh kotogula borka pore ki martese" } },
+			{ raziImage, { "we shall not let any sorcery hinder us!" } },
+		};
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel3Narrative3()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ omeeImage, { "khaise re eibar 2 da ekloge?" } },
+			{ aiyanImage, { "ajkei hoyto shesh polok felte hobe" } },
+			{ raziImage, { "mama age uronto bhodai tare dhor naile morum ekdom sure" } },
+			{ tirthoImage, { "razi bangla koite pare? " } }
+		};
+		std::vector<int> levelSpeakers = { omeeImage, aiyanImage, raziImage, tirthoImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel3Narrative4()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ tirthoImage, { "na mama bohut koshto hoilo amare chara tora ki korti" } },
+			{ aiyanImage, { "amare chara ki korti oiti ko bolod" } },
+			{ raziImage, { "pls all maintain decorum" } },
+			{ omeeImage, { "ei ingrez halay abar decoration maray" } }
+		};
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel4Narrative1()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ tirthoImage, { "mamo castle te ber hoite na hoitei dehi abar genjam" } },
+			{ aiyanImage, { "mama edire na age mere ashsi je game banaise tar mone hoy creativity eitukei shesh" } },
+			{ raziImage, { "u r absolutely right this is boring & repetitive" } },
+			{ omeeImage, { "*** ******** **** *** ******* ** " } },
+			{ raziImage, { "why r u speaking stars brother " } }
+		};
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage, raziImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel4Narrative2()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ tirthoImage, { "kire eitareo to pitaisilam" } },
+			{ aiyanImage, { "negative review dimu faltu" } },
+			{ raziImage, { "i agree this game also lacks diversity & inclusivity there are no bla-" } },
+			{ omeeImage, { "thabor dibo" } },
+		};
+		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel4Narrative3()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ aiyanImage, { "bai last level manei ki shob boss ekloge diya dibi" } },
+			{ tirthoImage, { "pera koi mojai to lagtese" } },
+			{ raziImage, { "we are like anime protagonists who have went through their training arc and have become stronger" } },
+			{ omeeImage, { "aise salikin 2.0" } },
+		};
+		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLevel4Narrative4()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ aiyanImage, { "mama eiti ki final boss" } },
+			{ tirthoImage, { "bhab shab to omoni" } },
+			{ raziImage, { "do not worry frends we will slay him like all the others" } },
+			{ omeeImage, { "shobar age tore pidai" } },
+		};
+		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage, raziImage, omeeImage };
+		narratives.push_back(levelDialogue);
+		speakerOrders.push_back(levelSpeakers);
+		activeNarrativeIndex = narratives.size() - 1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = true;
+	}
+	void loadLastNarrative()
+	{
+		std::map<int, std::vector<std::string>> levelDialogue = {
+			{ aiyanImage, { "mama amra ki jitsi" } },
+			{ tirthoImage, { "ho mama amgo course shesh" } },
+			{ raziImage, { "chokh diye pani portice" } },
+			{ omeeImage, { "ei halay ekhon abar bangla koy ere group theke bair kor" } },
 		};
 		std::vector<int> levelSpeakers = { aiyanImage, tirthoImage, raziImage, omeeImage };
 		narratives.push_back(levelDialogue);
@@ -246,6 +390,15 @@ public:
 				narrativeActive = false;
 			}
 		}
+	}
+	void reset()
+	{
+		activeNarrativeIndex = -1;
+		currentSpeakerIndex = 0;
+		dialogueIndex = 0;
+		narrativeActive = false;
+		narratives.clear();
+		speakerOrders.clear();
 	}
 };
 #endif // NARRATIVE_H

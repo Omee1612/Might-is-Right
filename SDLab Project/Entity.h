@@ -1,4 +1,5 @@
-﻿#include <string>
+﻿#include <algorithm>
+#include <string>
 #include <vector>
 #include "iGraphics.h"
 #include <cmath>
@@ -23,30 +24,72 @@ public:
 	int getWidth() const { return width; }
 	int getHeight() const { return height; }
 };
+class PlayerProjectile {
+public:
+	Pos position;
+	Dim dimension;
+	float velocityX;
+	float velocityY;
+	mutable bool isActive;
+	int sprite;
 
+	PlayerProjectile(Pos pos, Dim dim, float velX, float velY, int spr)
+		: position(pos), dimension(dim), velocityX(velX), velocityY(velY), sprite(spr), isActive(true) {}
+
+	void update(double deltaTime) {
+		if (!isActive) return;
+
+		position.setX(position.getX() + velocityX * deltaTime);
+		position.setY(position.getY() + velocityY * deltaTime);
+
+		// Deactivate the projectile if it goes off-screen
+		if (position.getX() < 0 || position.getX() > 1920 || position.getY() < 0 || position.getY() > 1080) {
+			isActive = false;
+		}
+	}
+
+	void render() {
+		if (!isActive) return;
+		iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), sprite);
+	}
+};
 class Entity {
+protected:
+	int FP = 0;
 public:
 	std::string name;
 	std::string hitSoundPath;
 	Pos position;
+	double specialTimer = 0.0;
 	int offSetX = 0;
 	Dim dimension;
 	bool facingRight = true;
 	bool movingRight = true;
 	bool jumping = false;
+	bool isBlocking = false;
 	std::vector<int> sprites;
 	int walkIndex = 3;  // Default to idle
+	int blockSprite;
 	bool isIdle = true;
 	bool isDead = false;
+	bool isSpecial = false;
+	int specialSprite;
+	int specialWidth = 800;
+	int specialHeight;
+	int specialX = 100;
 	int HP = 100;
 	bool isJumping = false;
+	bool isRanged = false; // Whether the entity is ranged
+	float projectileSpeed = 50.0f*2.4; // Speed of the projectiles
+	int projectileSprite; // Sprite for the projectile
+	std::vector<PlayerProjectile> projectiles; // List of active projectiles
 	float jumpVelocityX = 0.0f;
 	float jumpVelocityY = 0.0f;
 	float gravity = -30.5f;// Gravity force
 	int groundY;            // Y-position of the ground
 	int attackSprite;
 	double attackTimer = 0.0;
-	double attackDuration = 0.5;
+	double attackDuration = 0.3f;
 	bool isAttacking = false;
 	Entity(std::string name, Pos pos, Dim dim, std::string folder, double attackDuration = 0.5, int offSetX = 0)
 		: name(name), position(pos), dimension(dim) {
@@ -55,55 +98,64 @@ public:
 		this->offSetX = offSetX;
 	}
 
+	int fp() const
+	{
+		return FP;
+	}
+	void setFP(int FP)
+	{
+		this->FP = FP;
+	}
+
 	Entity(const Entity& other)
 		: name(other.name),
-		  hitSoundPath(other.hitSoundPath),
-		  position(other.position),
-		  offSetX(other.offSetX),
-		  dimension(other.dimension),
-		  facingRight(other.facingRight),
-		  movingRight(other.movingRight),
-		  jumping(other.jumping),
-		  sprites(other.sprites),
-		  walkIndex(other.walkIndex),
-		  isIdle(other.isIdle),
-		  isAttacking(other.isAttacking),
-		  isDead(other.isDead),
-		  HP(other.HP),
-		  isJumping(other.isJumping),
-		  jumpVelocityX(other.jumpVelocityX),
-		  jumpVelocityY(other.jumpVelocityY),
-		  gravity(other.gravity),
-		  groundY(other.groundY),
-		  attackSprite(other.attackSprite),
-		  attackTimer(other.attackTimer),
-		  attackDuration(other.attackDuration)
+		hitSoundPath(other.hitSoundPath),
+		position(other.position),
+		offSetX(other.offSetX),
+		dimension(other.dimension),
+		facingRight(other.facingRight),
+		movingRight(other.movingRight),
+		jumping(other.jumping),
+		sprites(other.sprites),
+		walkIndex(other.walkIndex),
+		isIdle(other.isIdle),
+		isAttacking(other.isAttacking),
+		isDead(other.isDead),
+		HP(other.HP),
+		isJumping(other.isJumping),
+		jumpVelocityX(other.jumpVelocityX),
+		jumpVelocityY(other.jumpVelocityY),
+		gravity(other.gravity),
+		groundY(other.groundY),
+		attackSprite(other.attackSprite),
+		attackTimer(other.attackTimer),
+		attackDuration(other.attackDuration)
 	{
 	}
 
-	Entity(Entity&& other) 
+	Entity(Entity&& other)
 		: name(std::move(other.name)),
-		  hitSoundPath(std::move(other.hitSoundPath)),
-		  position(std::move(other.position)),
-		  offSetX(other.offSetX),
-		  dimension(std::move(other.dimension)),
-		  facingRight(other.facingRight),
-		  movingRight(other.movingRight),
-		  jumping(other.jumping),
-		  sprites(std::move(other.sprites)),
-		  walkIndex(other.walkIndex),
-		  isIdle(other.isIdle),
-		  isAttacking(other.isAttacking),
-		  isDead(other.isDead),
-		  HP(other.HP),
-		  isJumping(other.isJumping),
-		  jumpVelocityX(other.jumpVelocityX),
-		  jumpVelocityY(other.jumpVelocityY),
-		  gravity(other.gravity),
-		  groundY(other.groundY),
-		  attackSprite(other.attackSprite),
-		  attackTimer(other.attackTimer),
-		  attackDuration(other.attackDuration)
+		hitSoundPath(std::move(other.hitSoundPath)),
+		position(std::move(other.position)),
+		offSetX(other.offSetX),
+		dimension(std::move(other.dimension)),
+		facingRight(other.facingRight),
+		movingRight(other.movingRight),
+		jumping(other.jumping),
+		sprites(std::move(other.sprites)),
+		walkIndex(other.walkIndex),
+		isIdle(other.isIdle),
+		isAttacking(other.isAttacking),
+		isDead(other.isDead),
+		HP(other.HP),
+		isJumping(other.isJumping),
+		jumpVelocityX(other.jumpVelocityX),
+		jumpVelocityY(other.jumpVelocityY),
+		gravity(other.gravity),
+		groundY(other.groundY),
+		attackSprite(other.attackSprite),
+		attackTimer(other.attackTimer),
+		attackDuration(other.attackDuration)
 	{
 	}
 
@@ -143,7 +195,7 @@ public:
 		this->isDead = false;
 	}
 	bool getAttacking() { return isAttacking; }
-	Entity& operator=(Entity&& other) 
+	Entity& operator=(Entity&& other)
 	{
 		if (this == &other)
 			return *this;
@@ -195,44 +247,46 @@ public:
 		attackSprite = iLoadImage(const_cast<char*>(filepath2.c_str()));
 		std::string soundPath = folder + "/Hit";
 		hitSoundPath = soundPath;
-
 	}
 
 	virtual bool isColliding(Entity& other) {
-		// Get this entity's position and dimensions
-		int x1 = position.getX();
-		int y1 = position.getY();
-		int x2 = x1 + dimension.getWidth();
-		int y2 = y1 + dimension.getHeight();
+		if (other.isDead) return false;
 
 		// Get the other entity's position and dimensions
-		int ex1 = other.position.getX();
-		int ey1 = other.position.getY();
-		int ex2 = ex1 + other.dimension.getWidth();
-		int ey2 = ey1 + other.dimension.getHeight();
+		float ex1 = other.position.getX();
+		float ey1 = other.position.getY();
+		float eWidth = other.dimension.getWidth();
+		float eHeight = other.dimension.getHeight();
 
-		// Adjust for facing direction of the other entity
+		// Adjust the collision box based on offsetX and facing direction
 		if (other.facingRight) {
-			// If facing right, apply the offset to ex1
-			ex1 = other.position.getX() + other.offSetX;
-			ex2 = ex1 + other.dimension.getWidth() - other.offSetX * 2; // Update ex2 normally
+			ex1 += other.offSetX;
+			eWidth -= other.offSetX;
 		}
 		else {
-			// If facing left (flipped), apply the offset by adjusting ex2
-			ex2 = other.position.getX() + other.dimension.getWidth() - other.offSetX;
-			ex1 = ex2 - other.dimension.getWidth();  // Ensure ex1 is calculated correctly from ex2
+			eWidth -= other.offSetX;
 		}
 
+		// Get this entity's position and dimensions
+		float x1 = position.getX();
+		float y1 = position.getY();
+		float width = dimension.getWidth();
+		float height = dimension.getHeight();
 
 		// Check for collision using AABB (Axis-Aligned Bounding Box) method
-		return (x1 < ex2 && x2 > ex1 && y1 < ey2 && y2 > ey1);
+		return (x1 < ex1 + eWidth &&
+			x1 + width > ex1 &&
+			y1 < ey1 + eHeight &&
+			y1 + height > ey1);
 	}
+
 
 
 
 
 	virtual void takeDamage(int amount)
 	{
+		if (isBlocking) amount = 0;
 		if (HP - amount <= 0)
 		{
 			isDead = true;
@@ -240,6 +294,21 @@ public:
 			return;
 		}
 		HP -= amount;
+	}
+	void shoot() {
+		if (!isRanged) return;
+
+		// Calculate the projectile's starting position
+		float startX = facingRight ? position.getX() + dimension.getWidth() : position.getX();
+		float startY = position.getY() + dimension.getHeight() / 2;
+
+		// Calculate the projectile's velocity
+		float velX = facingRight ? projectileSpeed : -projectileSpeed;
+		float velY = 0; // Adjust if you want arcing projectiles
+		isAttacking = true;
+		// Create a new projectile
+		projectiles.emplace_back(Pos(startX, startY), Dim(32, 32), velX, velY, projectileSprite);
+		playAttackSound();
 	}
 	Pos getPosition() const
 	{
@@ -258,6 +327,8 @@ public:
 		if (isDead) return;
 		iSetColor(255, 0, 0);
 		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
+		iSetColor(0, 0, 255);
+		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 50, 1 * FP, 20);
 		if (isAttacking) {
 			if (facingRight) {
 				// Normal attack sprite when facing right
@@ -268,15 +339,41 @@ public:
 				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), attackSprite);
 			}
 		}
+		else if (isBlocking)
+		{
+			if (facingRight) {
+				// Normal attack sprite when facing right
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), blockSprite);
+			}
+			else {
+				// Flip attack sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), blockSprite);
+			}
+		}
 		else if (facingRight) {
 			iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), sprites[walkIndex]);
 		}
 		else {
 			iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), sprites[walkIndex]);
 		}
+		for (auto& projectile : projectiles) {
+			projectile.render();
+		}
+		if (isSpecial)
+		{
+			iShowImage(specialX, 300, 400, 300, specialSprite);
+		}
 	}
-
+	void specialAttack(Entity& entity)
+	{
+		if (FP >= 100)
+		{
+			isSpecial = true;
+			entity.takeDamage(30);
+		}
+	}
 	virtual void updateAnimation(double deltaTime) {
+		double specialTimerCooldown = 20.0;
 		if (!isIdle) {
 			walkIndex = (walkIndex + 1) % 3;
 		}
@@ -291,7 +388,18 @@ public:
 				attackTimer = 0.0;
 			}
 		}
-
+		if (isSpecial)
+		{
+			FP = 0;
+			specialTimer += 2.5;
+			specialX += 200;
+			if (specialTimer >= specialTimerCooldown)
+			{
+				specialX = 100;
+				isSpecial = false;
+				specialTimer = 0.0;
+			}
+		}
 		if (isJumping) {
 			// Continue the player's horizontal movement while jumping
 			position.setX(position.getX() + jumpVelocityX);
@@ -313,11 +421,19 @@ public:
 				isJumping = false;
 			}
 		}
+		for (auto& projectile : projectiles) {
+			projectile.update(deltaTime);
+		}
+
+		// Remove inactive projectiles
+		projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
+			[](const PlayerProjectile& p) { return !p.isActive; }), projectiles.end());
 	}
+
 
 	virtual void attack() {
 		if (isDead) return;
-		if (!isAttacking) {
+		if (!isAttacking && !isBlocking) {
 			isAttacking = true;
 			playAttackSound();
 			attackTimer = 0.0;
@@ -367,6 +483,7 @@ public:
 
 	void stopMoving() {
 		isIdle = true;
+		isBlocking = false;
 		walkIndex = 3;
 	}
 	void playAttackSound()
@@ -515,133 +632,15 @@ public:
 	bool isAttacking;
 	bool deathCounted = false;
 	bool isRanged;
-	Enemy(std::string name, Pos pos, Dim dim, std::string folder, int hp, int speed, bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX = 0, int attackIndexDmg = 0, int damage = 10)
+	Enemy(std::string name, Pos pos, Dim dim, std::string folder, int hp, int speed, bool ranged, int totalWalkFrames, int totalAttackFrames, std::string soundPath, float attackDuration, int offSetX = 0, int attackIndexDmg = 0, int damage = 10)
 		: Entity(name, pos, dim, folder, attackDuration), moveSpeed(speed), isMoving(true), isDead(false), isRanged(ranged), totalWalkFrames(totalWalkFrames), totalAttackFrames(totalAttackFrames), isIdle(false), isAttacking(false), facingRight(true) {
 		loadEnemySprites(folder);
 		this->HP = 100;
 		this->attackIndexDmg = attackIndexDmg;
 		this->offSetX = offSetX;
+		this->hitSoundPath = soundPath;
 		this->damage = damage;
 	}
-
-	Enemy(const Enemy& other)
-		: Entity(other),
-		  moveSpeed(other.moveSpeed),
-		  moveSprites(other.moveSprites),
-		  attackSprites(other.attackSprites),
-		  projectiles(other.projectiles),
-		  moveIndex(other.moveIndex),
-		  attackIndex(other.attackIndex),
-		  frameTime(other.frameTime),
-		  lastUpdatedTime(other.lastUpdatedTime),
-		  totalWalkFrames(other.totalWalkFrames),
-		  totalAttackFrames(other.totalAttackFrames),
-		  shootCooldown(other.shootCooldown),
-		  shootTimer(other.shootTimer),
-		  isMoving(other.isMoving),
-		  isDead(other.isDead),
-		  isAttacking(other.isAttacking),
-		  isIdle(other.isIdle),
-		  facingRight(other.facingRight),
-		  folder(other.folder),
-		  idleSprite(other.idleSprite),
-		  attackIndexDmg(other.attackIndexDmg),
-		  projectileSprite(other.projectileSprite),
-		  deathCounted(other.deathCounted),
-		  isRanged(other.isRanged)
-	{
-	}
-
-	Enemy(Enemy&& other) 
-		: Entity(std::move(other)),
-		  moveSpeed(other.moveSpeed),
-		  moveSprites(std::move(other.moveSprites)),
-		  attackSprites(std::move(other.attackSprites)),
-		  projectiles(std::move(other.projectiles)),
-		  moveIndex(other.moveIndex),
-		  attackIndex(other.attackIndex),
-		  frameTime(other.frameTime),
-		  lastUpdatedTime(other.lastUpdatedTime),
-		  totalWalkFrames(other.totalWalkFrames),
-		  totalAttackFrames(other.totalAttackFrames),
-		  shootCooldown(other.shootCooldown),
-		  shootTimer(other.shootTimer),
-		  isMoving(other.isMoving),
-		  isDead(other.isDead),
-		  isAttacking(other.isAttacking),
-		  isIdle(other.isIdle),
-		  facingRight(other.facingRight),
-		  folder(std::move(other.folder)),
-		  idleSprite(other.idleSprite),
-		  attackIndexDmg(other.attackIndexDmg),
-		  projectileSprite(other.projectileSprite),
-		  deathCounted(other.deathCounted),
-		  isRanged(other.isRanged)
-	{
-	}
-
-	Enemy& operator=(const Enemy& other)
-	{
-		if (this == &other)
-			return *this;
-		Entity::operator =(other);
-		moveSpeed = other.moveSpeed;
-		moveSprites = other.moveSprites;
-		attackSprites = other.attackSprites;
-		projectiles = other.projectiles;
-		moveIndex = other.moveIndex;
-		attackIndex = other.attackIndex;
-		frameTime = other.frameTime;
-		lastUpdatedTime = other.lastUpdatedTime;
-		totalWalkFrames = other.totalWalkFrames;
-		totalAttackFrames = other.totalAttackFrames;
-		shootCooldown = other.shootCooldown;
-		shootTimer = other.shootTimer;
-		isMoving = other.isMoving;
-		isDead = other.isDead;
-		isAttacking = other.isAttacking;
-		isIdle = other.isIdle;
-		facingRight = other.facingRight;
-		folder = other.folder;
-		idleSprite = other.idleSprite;
-		attackIndexDmg = other.attackIndexDmg;
-		projectileSprite = other.projectileSprite;
-		deathCounted = other.deathCounted;
-		isRanged = other.isRanged;
-		return *this;
-	}
-
-	Enemy& operator=(Enemy&& other) 
-	{
-		if (this == &other)
-			return *this;
-		Entity::operator =(std::move(other));
-		moveSpeed = other.moveSpeed;
-		moveSprites = std::move(other.moveSprites);
-		attackSprites = std::move(other.attackSprites);
-		projectiles = std::move(other.projectiles);
-		moveIndex = other.moveIndex;
-		attackIndex = other.attackIndex;
-		frameTime = other.frameTime;
-		lastUpdatedTime = other.lastUpdatedTime;
-		totalWalkFrames = other.totalWalkFrames;
-		totalAttackFrames = other.totalAttackFrames;
-		shootCooldown = other.shootCooldown;
-		shootTimer = other.shootTimer;
-		isMoving = other.isMoving;
-		isDead = other.isDead;
-		isAttacking = other.isAttacking;
-		isIdle = other.isIdle;
-		facingRight = other.facingRight;
-		folder = std::move(other.folder);
-		idleSprite = other.idleSprite;
-		attackIndexDmg = other.attackIndexDmg;
-		projectileSprite = other.projectileSprite;
-		deathCounted = other.deathCounted;
-		isRanged = other.isRanged;
-		return *this;
-	}
-
 	void loadEnemySprites(std::string folder) {
 		moveSprites.resize(totalWalkFrames);
 		attackSprites.resize(totalAttackFrames);
@@ -670,7 +669,51 @@ public:
 		path = folder + "/Idle.png";
 		idleSprite = iLoadImage(const_cast<char*>(path.c_str()));
 	}
+	bool checkCollision(const Pos& pos1, const Dim& dim1, const Pos& pos2, const Dim& dim2) {
+		// Adjust the collision box based on offsetX and facing direction
+		if (isDead) return false;
+		float adjustedX1 = pos1.getX();
+		float adjustedWidth1 = dim1.getWidth();
 
+		if (facingRight) {
+			// If facing right, offsetX is added to the left side of the sprite
+			adjustedX1 += offSetX;
+			adjustedWidth1 -= offSetX;
+		}
+		else {
+			// If facing left, offsetX is added to the right side of the sprite
+			adjustedWidth1 -= offSetX;
+		}
+
+		// Perform collision detection with the adjusted collision box
+		return (adjustedX1 < pos2.getX() + dim2.getWidth() &&
+			adjustedX1 + adjustedWidth1 > pos2.getX() &&
+			pos1.getY() < pos2.getY() + dim2.getHeight() &&
+			pos1.getY() + dim1.getHeight() > pos2.getY());
+	}
+	bool checkProjectileCollisions(const std::vector<PlayerProjectile>& playerProjectiles, Entity& player) {
+		if (isDead) return false; // Skip if the enemy is already dead
+
+		for (const auto& projectile : playerProjectiles) {
+			if (projectile.isActive && checkCollision(projectile.position, projectile.dimension, position, dimension)) {
+				// Handle collision
+				if ((player.name == "Tirtha" && name == "Tactician") || (player.name == "Razi" && name == "Enforcer"))
+				{
+					if (player.fp() <= 100)
+						player.setFP(player.fp() + 15);
+					takeDamage(20);
+				}
+				else
+				{
+					if (player.fp() <= 100)
+						player.setFP(player.fp() + 5);
+					takeDamage(5);
+				}
+				return true; // Indicate that a collision occurred
+			}
+		}
+		return false; // No collision occurred
+	}
 	void moveTowardsPlayer(Pos playerPos) {
 		if (isRanged) {
 			// Update the enemy's facing direction based on player position
@@ -738,22 +781,23 @@ public:
 
 			// Create a new projectile based on the enemy's facing direction
 			int projX = facingRight ? getPosition().getX() + dimension.getWidth() : getPosition().getX();
-			int projSpeed = facingRight ? 7 * 2.4 : -7 * 2.4;  // Make the projectile move in the correct direction
+			int projSpeed = facingRight ? 21 * 2.4 : -21 * 2.4;  // Make the projectile move in the correct direction
 
 			projectiles.emplace_back(projX, getPosition().getY() + 18 * 1.8, projSpeed, projectileSprite);
 
 			shootTimer = 0.0f;  // Reset shoot timer after shooting
+			PlaySound(hitSoundPath.c_str(), NULL, SND_ASYNC);
 		}
 	}
 	void checkForAttack(Entity& player) {
-    const float meleeAttackThreshold = 30.0f; // Minimum distance to trigger melee attack
+		const float meleeAttackThreshold = 30.0f; // Minimum distance to trigger melee attack
 
-    float distanceToPlayer = std::abs(getPosition().getX() - player.getPosition().getX());
+		float distanceToPlayer = std::abs(getPosition().getX() - player.getPosition().getX());
 
-    if (distanceToPlayer <= 70.0f * 2.4 && distanceToPlayer >= meleeAttackThreshold && !isAttacking) {
-        attack();
-    }
-}
+		if (distanceToPlayer <= 70.0f * 2.4 && distanceToPlayer >= meleeAttackThreshold && !isAttacking) {
+			attack();
+		}
+	}
 
 	void attack() override {
 		// Only initiate attack if not already attacking
@@ -761,6 +805,7 @@ public:
 			isAttacking = true;
 			attackIndex = 0;   // Start from the first attack animation frame
 			attackTimer = 0.0;  // Reset attack timer
+			PlaySound(hitSoundPath.c_str(), NULL, SND_ASYNC);
 		}
 	}
 
@@ -790,6 +835,7 @@ public:
 	}
 
 	virtual void updateAnimation(double deltaTime, Entity& player) {
+		if (HP <= 0) isDead = true;
 		if (isAttacking) {
 			// Increment the attack timer to track the attack's duration
 			attackTimer += deltaTime;
@@ -824,6 +870,7 @@ public:
 		if (isDead) return;
 
 		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
 		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
 		if (isAttacking) {
 			if (facingRight) {
@@ -870,8 +917,8 @@ public:
 
 	KalaJahangir(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
 		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
-		int damage, int death_sprites_size)
-		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, attackDuration, offSetX,
+		int damage, int death_sprites_size,std::string path)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, path,attackDuration, offSetX,
 		attackIndexDmg, damage),
 		deathSpritesSize(death_sprites_size)
 	{
@@ -932,6 +979,7 @@ public:
 			return;
 		}
 		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
 		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
 		if (isAttacking) {
 			if (facingRight) {
@@ -979,8 +1027,8 @@ public:
 
 	KopaSamsu(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
 		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
-		int damage, int death_sprites_size)
-		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, attackDuration, offSetX,
+		int damage, int death_sprites_size,std::string path)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, path,attackDuration, offSetX,
 		attackIndexDmg, damage),
 		deathSpritesSize(death_sprites_size)
 	{
@@ -1041,6 +1089,339 @@ public:
 			return;
 		}
 		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
+		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
+		if (isAttacking) {
+			if (facingRight) {
+				// Normal attack sprite when facing right
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+			else {
+				// Flip attack sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+		}
+		// If not attacking, show the movement or idle sprite
+		else if (isMoving) {
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+			else {
+				// Flip walking sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+		}
+		else {
+			// Idle sprite (also flipped if facing left)
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+			else {
+				// Flip idle sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+		}
+
+		// Render projectiles
+		renderProjectiles();
+	}
+};
+
+class ChakkuMojumder : public Enemy
+{
+public:
+	std::vector<int> deathSprites;
+	int deathSpritesSize;
+	int deathSpriteIndex = 0;
+	bool isDying = false;
+
+	ChakkuMojumder(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
+		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
+		int damage, int death_sprites_size,std::string path)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, path,attackDuration, offSetX,
+		attackIndexDmg, damage),
+		deathSpritesSize(death_sprites_size)
+	{
+		isDead = false;
+		std::vector<int> deathS;
+		for (int i = 0; i < 9; i++)
+		{
+			std::string path = "res/chakkumojumder/death (" + std::to_string(i + 1) + ").png";
+			deathS.emplace_back(iLoadImage(const_cast<char*>(path.c_str())));
+		}
+		deathSprites = deathS;
+	}
+	void takeDamage(int damage) override
+	{
+		HP -= damage;
+		if (HP <= 0) {
+			HP = 0;
+			isDying = true;
+		}
+	}
+
+	void updateAnimation(double deltaTime, Entity& player) override
+	{
+		if (isDying)
+		{
+			deathSpriteIndex = (deathSpriteIndex + 1) % deathSpritesSize;
+			if (deathSpriteIndex == deathSpritesSize - 1) isDead = true;
+			return;
+		}
+
+		// Check if the enemy is attacking
+		if (isAttacking) {
+			attackTimer += deltaTime;
+			if (attackTimer >= attackDuration) {
+				isAttacking = false; // End attack animation
+				attackTimer = 0.0;
+			}
+			attackIndex = static_cast<int>((attackTimer / attackDuration) * totalAttackFrames);
+			if (attackIndex == attackIndexDmg && isColliding(player)) {
+				player.takeDamage(damage); // Apply damage
+				std::cout << "Player takes damage from melee attack at frame " << attackIndex << std::endl;
+			}
+		}
+		// Handle movement animation
+		else if (isMoving) {
+			moveIndex = (moveIndex + 1) % totalWalkFrames;
+		}
+		else {
+			moveIndex = 0;  // Reset to idle frame
+		}
+	}
+
+	void render() override {
+		if (isDead) return;
+		if (isDying)
+		{
+			iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), deathSprites[deathSpriteIndex]);
+			return;
+		}
+		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
+		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
+		if (isAttacking) {
+			if (facingRight) {
+				// Normal attack sprite when facing right
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+			else {
+				// Flip attack sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+		}
+		// If not attacking, show the movement or idle sprite
+		else if (isMoving) {
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+			else {
+				// Flip walking sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+		}
+		else {
+			// Idle sprite (also flipped if facing left)
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+			else {
+				// Flip idle sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+		}
+
+		// Render projectiles
+		renderProjectiles();
+	}
+};
+
+class Boltu : public Enemy
+{
+public:
+	std::vector<int> deathSprites;
+	int deathSpritesSize;
+	int deathSpriteIndex = 0;
+	bool isDying = false;
+
+	Boltu(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
+		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
+		int damage, int death_sprites_size, std::string path)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, path,attackDuration, offSetX,
+		attackIndexDmg, damage),
+		deathSpritesSize(death_sprites_size)
+	{
+		isDead = false;
+		std::vector<int> deathS;
+		for (int i = 0; i < 7; i++)
+		{
+			std::string path = "res/boltu/death" + std::to_string(i) + ".png";
+			deathS.emplace_back(iLoadImage(const_cast<char*>(path.c_str())));
+		}
+		deathSprites = deathS;
+	}
+	void takeDamage(int damage) override
+	{
+		HP -= damage;
+		if (HP <= 0) {
+			HP = 0;
+			isDying = true;
+		}
+	}
+
+	void updateAnimation(double deltaTime, Entity& player) override
+	{
+		if (isDying)
+		{
+			deathSpriteIndex = (deathSpriteIndex + 1) % deathSpritesSize;
+			if (deathSpriteIndex == deathSpritesSize - 1) isDead = true;
+			return;
+		}
+
+		// Check if the enemy is attacking
+		if (isAttacking) {
+			attackTimer += deltaTime;
+			if (attackTimer >= attackDuration) {
+				isAttacking = false; // End attack animation
+				attackTimer = 0.0;
+			}
+			attackIndex = static_cast<int>((attackTimer / attackDuration) * totalAttackFrames);
+			if (attackIndex == attackIndexDmg && isColliding(player)) {
+				player.takeDamage(damage); // Apply damage
+				std::cout << "Player takes damage from melee attack at frame " << attackIndex << std::endl;
+			}
+		}
+		// Handle movement animation
+		else if (isMoving) {
+			moveIndex = (moveIndex + 1) % totalWalkFrames;
+		}
+		else {
+			moveIndex = 0;  // Reset to idle frame
+		}
+		updateProjectiles(player);
+	}
+
+	void render() override {
+		if (isDead) return;
+		if (isDying)
+		{
+			iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), deathSprites[deathSpriteIndex]);
+			return;
+		}
+		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
+		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
+		if (isAttacking) {
+			if (facingRight) {
+				// Normal attack sprite when facing right
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+			else {
+				// Flip attack sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), attackSprites[attackIndex]);
+			}
+		}
+		// If not attacking, show the movement or idle sprite
+		else if (isMoving) {
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+			else {
+				// Flip walking sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), moveSprites[moveIndex]);
+			}
+		}
+		else {
+			// Idle sprite (also flipped if facing left)
+			if (facingRight) {
+				iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+			else {
+				// Flip idle sprite when facing left
+				iShowImage(position.getX() + dimension.getWidth(), position.getY(), -dimension.getWidth(), dimension.getHeight(), idleSprite);
+			}
+		}
+
+		// Render projectiles
+		renderProjectiles();
+	}
+};
+
+class Omega : public Enemy
+{
+public:
+	std::vector<int> deathSprites;
+	int deathSpritesSize;
+	int deathSpriteIndex = 0;
+
+	bool isDying = false;
+
+	Omega(const std::string& name, const Pos& pos, const Dim& dim, const std::string& folder, int hp, int speed,
+		bool ranged, int totalWalkFrames, int totalAttackFrames, float attackDuration, int offSetX, int attackIndexDmg,
+		int damage, int death_sprites_size, std::string path)
+		: Enemy(name, pos, dim, folder, hp, speed, ranged, totalWalkFrames, totalAttackFrames, path, attackDuration, offSetX,
+		attackIndexDmg, damage),
+		deathSpritesSize(death_sprites_size)
+	{
+		isDead = false;
+		std::vector<int> deathS;
+		for (int i = 0; i < 7; i++)
+		{
+			std::string path = "res/boltu/death" + std::to_string(i) + ".png";
+			deathS.emplace_back(iLoadImage(const_cast<char*>(path.c_str())));
+		}
+		deathSprites = deathS;
+	}
+	void takeDamage(int damage) override
+	{
+		HP -= damage;
+		if (HP <= 0) {
+			HP = 0;
+			isDying = true;
+		}
+	}
+	void updateAnimation(double deltaTime, Entity& player) override
+	{
+		if (isDying)
+		{
+			deathSpriteIndex = (deathSpriteIndex + 1) % deathSpritesSize;
+			if (deathSpriteIndex == deathSpritesSize - 1) isDead = true;
+			return;
+		}
+
+		// Check if the enemy is attacking
+		if (isAttacking) {
+			attackTimer += deltaTime;
+			if (attackTimer >= attackDuration) {
+				isAttacking = false; // End attack animation
+				attackTimer = 0.0;
+			}
+			attackIndex = static_cast<int>((attackTimer / attackDuration) * totalAttackFrames);
+			if (attackIndex == attackIndexDmg && isColliding(player)) {
+				player.takeDamage(damage); // Apply damage
+				std::cout << "Player takes damage from melee attack at frame " << attackIndex << std::endl;
+			}
+		}
+		// Handle movement animation
+		else if (isMoving) {
+			moveIndex = (moveIndex + 1) % totalWalkFrames;
+		}
+		else {
+			moveIndex = 0;  // Reset to idle frame
+		}
+		updateProjectiles(player);
+	}
+
+	void render() override {
+		if (isDead) return;
+		if (isDying)
+		{
+			iShowImage(position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight(), deathSprites[deathSpriteIndex]);
+			return;
+		}
+		// Check if the enemy is attacking
+		iSetColor(255, 0, 0);
 		iFilledRectangle(position.getX(), position.getY() + dimension.getHeight() + 20, 1 * HP, 20);
 		if (isAttacking) {
 			if (facingRight) {
