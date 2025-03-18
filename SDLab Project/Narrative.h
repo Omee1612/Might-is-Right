@@ -286,8 +286,7 @@ public:
 			{ tirthoImage, { "mamo castle te ber hoite na hoitei dehi abar genjam" } },
 			{ aiyanImage, { "mama edire na age mere ashsi je game banaise tar mone hoy creativity eitukei shesh" } },
 			{ raziImage, { "u r absolutely right this is boring & repetitive" } },
-			{ omeeImage, { "*** ******** **** *** ******* ** " } },
-			{ raziImage, { "why r u speaking stars brother " } }
+			{ omeeImage, { "*** ******** **** *** ******* ** " } }
 		};
 		std::vector<int> levelSpeakers = { tirthoImage, aiyanImage, raziImage, omeeImage, raziImage };
 		narratives.push_back(levelDialogue);

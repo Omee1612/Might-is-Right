@@ -511,7 +511,7 @@ void handleKopa()
 }
 void handleChakku()
 {
-	chakku->updateAnimation(0.013, players[activePlayerIndex]);
+	chakku->updateAnimation(0.05, players[activePlayerIndex]);
 	chakku->moveTowardsPlayer(players[activePlayerIndex].getPosition());
 	chakku->checkForAttack(players[activePlayerIndex]);
 }
@@ -524,7 +524,7 @@ void handleBoltu()
 }
 void handleOmega()
 {
-	omega->updateAnimation(0.02, players[activePlayerIndex]);
+	omega->updateAnimation(0.05, players[activePlayerIndex]);
 	omega->moveTowardsPlayer(players[activePlayerIndex].getPosition());
 	omega->checkForAttack(players[activePlayerIndex]);
 }

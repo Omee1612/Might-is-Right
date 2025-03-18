@@ -1,4 +1,4 @@
-﻿Build started 3/18/2025 11:11:19 PM.
+﻿Build started 3/19/2025 12:37:38 AM.
      1>Project "E:\CSE\Might-is-Right-main\SDLab Project\SDLab Project.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
@@ -64,4 +64,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.39
+Time Elapsed 00:00:01.48
